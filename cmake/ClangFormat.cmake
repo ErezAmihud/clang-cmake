@@ -6,19 +6,7 @@
 include(${CMAKE_CURRENT_LIST_DIR}/_utils.cmake)
 
 function(prefix_clangformat_setup prefix)
-  if(NOT CLANGFORMAT_EXECUTABLE)
-    set(CLANGFORMAT_EXECUTABLE clang-format)
-  endif()
-
-  if(NOT EXISTS ${CLANGFORMAT_EXECUTABLE})
-    find_program(clangformat_executable_tmp ${CLANGFORMAT_EXECUTABLE})
-    if(clangformat_executable_tmp)
-      set(CLANGFORMAT_EXECUTABLE ${clangformat_executable_tmp})
-      unset(clangformat_executable_tmp)
-    else()
-      message(FATAL_ERROR "ClangFormat: ${CLANGFORMAT_EXECUTABLE} not found! Aborting")
-    endif()
-  endif()
+	find_program(CLANGFORMAT_EXECUTABLE clang-format)
 
   foreach(clangformat_source ${ARGN})
     get_filename_component(clangformat_source ${clangformat_source} ABSOLUTE)
