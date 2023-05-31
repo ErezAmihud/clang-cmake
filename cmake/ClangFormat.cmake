@@ -3,6 +3,8 @@
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
+include(${CMAKE_CURRENT_LIST_DIR}/_utils.cmake)
+
 function(prefix_clangformat_setup prefix)
   if(NOT CLANGFORMAT_EXECUTABLE)
     set(CLANGFORMAT_EXECUTABLE clang-format)
@@ -23,7 +25,7 @@ function(prefix_clangformat_setup prefix)
     list(APPEND clangformat_sources ${clangformat_source})
   endforeach()
 
-  add_custom_target(${prefix}_clangformat
+  add_custom_target(${prefix}-format
     COMMAND
       ${CLANGFORMAT_EXECUTABLE}
       -style=file
@@ -35,11 +37,22 @@ function(prefix_clangformat_setup prefix)
       "Formatting ${prefix} with ${CLANGFORMAT_EXECUTABLE} ..."
   )
 
-  if(TARGET clangformat)
-    add_dependencies(clangformat ${prefix}_clangformat)
-  else()
-    add_custom_target(clangformat DEPENDS ${prefix}_clangformat)
-  endif()
+  add_custom_target(${prefix}-format-check
+	  COMMAND
+	  ${CLANGFORMAT_EXECUTABLE}
+	  -style=file
+	  --Werror
+	  -n
+	  ${clangformat_sources}
+	  WORKING_DIRECTORY
+	  ${CMAKE_SOURCE_DIR}
+	  COMMENT
+	  "check formatting of ${prefix}"
+	  )
+
+  add_or_create(format ${prefix}-format )
+  add_or_create(check-format ${prefix}-format-check) 
+  add_or_create(check check-format)
 endfunction()
 
 function(clangformat_setup)

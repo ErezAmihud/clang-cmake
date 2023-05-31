@@ -9,6 +9,14 @@ ClangFormat.cmake is a simple CMake module for clang-format support.
 The module requires CMake 3.0 or higher and some version of clang-format
 installed.
 
+## Commands
+check - run all checks as you would in ci
+fix - run all fixes
+format - run clang-format
+tidy - run clang-tidy
+iwyu - run iwyu
+
+
 ## Integration
 
 1. Obtain the module and add it into your project's CMake modules path:
