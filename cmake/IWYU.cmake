@@ -9,12 +9,21 @@ set(IWYU_TOOL ${CMAKE_CURRENT_LIST_DIR}/iwyu_tool.py)
 set(IWYU_FIX_INCLUDES ${CMAKE_CURRENT_LIST_DIR}/fix_includes.py)
 function(prefix_iwyu_setup prefix)
 	find_program(PYTHON_EXECUTABLE python)
-
+	
+	set(IWYU_IMP_COMMAND "")
+	if(IWYU_IMP)
+		set(IWYU_IMP_COMMAND "")
+		foreach(tmp IN LISTS IWYU_IMP)
+			set(IWYU_IMP_COMMAND ${IWYU_IMP_COMMAND} -Xiwyu --mapping_file=${tmp})
+		endforeach()
+	endif()
 	add_custom_target(${prefix}-iwyu
 		COMMAND
 		${PYTHON_EXECUTABLE}
 		${IWYU_FIX_INCLUDES}
-		-p ${CMAKE_BINARY_DIR}
+		-p=${CMAKE_BINARY_DIR}
+		--
+		${IWYU_IMP_COMMAND}
 		WORKING_DIRECTORY
 		${CMAKE_SOURCE_DIR}
 		COMMENT
@@ -25,7 +34,9 @@ function(prefix_iwyu_setup prefix)
 		COMMAND
 		${PYTHON_EXECUTABLE}
 		${IWYU_TOOL}
-		-p ${CMAKE_BINARY_DIR}
+		-p=${CMAKE_BINARY_DIR}
+		--
+		${IWYU_IMP_COMMAND}
 		WORKING_DIRECTORY
 		${CMAKE_SOURCE_DIR}
 		COMMENT
