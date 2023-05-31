@@ -17,6 +17,8 @@ tidy - run clang-tidy
 iwyu - run iwyu
 
 
+IWYU_IMP - the files of the iwyu mapping
+
 ## Integration
 
 1. Obtain the module and add it into your project's CMake modules path:
