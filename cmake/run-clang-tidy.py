@@ -382,36 +382,6 @@ def main():
         )
         tmpdir = tempfile.mkdtemp()
 
-    try:
-        invocation = get_tidy_invocation(
-            "",
-            clang_tidy_binary,
-            args.checks,
-            None,
-            build_path,
-            args.header_filter,
-            args.allow_enabling_alpha_checkers,
-            args.extra_arg,
-            args.extra_arg_before,
-            args.quiet,
-            args.config_file,
-            args.config,
-            args.line_filter,
-            args.use_color,
-            args.plugins,
-        )
-        invocation.append("-list-checks")
-        invocation.append("-")
-        if args.quiet:
-            # Even with -quiet we still want to check if we can call clang-tidy.
-            with open(os.devnull, "w") as dev_null:
-                subprocess.check_call(invocation, stdout=dev_null)
-        else:
-            subprocess.check_call(invocation)
-    except:
-        print("Unable to run clang-tidy.", file=sys.stderr)
-        sys.exit(1)
-
     # Load the database and extract all files.
     database = json.load(open(os.path.join(build_path, db_path)))
     files = set(
