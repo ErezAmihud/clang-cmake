@@ -10,7 +10,11 @@ set(IWYU_FIX_INCLUDES ${CMAKE_CURRENT_LIST_DIR}/fix_includes.py)
 function(prefix_iwyu_setup prefix)
 	find_program(PYTHON_EXECUTABLE python)
 	
+	list(FILTER ARGN EXCLUDE REGEX ".hpp")
+	list(FILTER ARGN EXCLUDE REGEX ".h$")
+	
 	foreach(iwyu_source ${ARGN})
+
 		get_filename_component(iwyu_source ${iwyu_source} ABSOLUTE)
 		list(APPEND iwyu_sources ${iwyu_source})
 	endforeach()
@@ -24,7 +28,7 @@ function(prefix_iwyu_setup prefix)
 	endif()
 
 	set(IWYU_OUTPUT "${CMAKE_BINARY_DIR}/${prefix}_iwyu.txt")
-	set(IWYU_COMMAND ${PYTHON_EXECUTABLE} ${IWYU_TOOL} -p=${CMAKE_BINARY_DIR} -- ${IWYU_IMP_COMMAND})
+	set(IWYU_COMMAND ${PYTHON_EXECUTABLE} ${IWYU_TOOL} -p=${CMAKE_BINARY_DIR} ${iwyu_sources} -- ${IWYU_IMP_COMMAND})
 	add_custom_target(${prefix}-iwyu
 		COMMAND ${IWYU_COMMAND} > ${IWYU_OUTPUT} || echo "nothing-print to avoid faliure"
 		COMMAND ${PYTHON_EXECUTABLE} ${IWYU_FIX_INCLUDES} < ${IWYU_OUTPUT}

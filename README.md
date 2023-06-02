@@ -8,17 +8,6 @@ Clang.cmake is a cmake module for clang-format, clang-tidy and include-what-you-
 
 The module requires CMake 3.0 or higher and some version of clang-format clang-tidy and iwyu installed.
 
-## Commands
-
-check - run all checks as you would in ci
-fix - run all fixes
-format - run clang-format
-tidy - run clang-tidy
-iwyu - run iwyu
-
-
-IWYU_IMP - the files of the iwyu mapping
-
 ## Integration
 
 1. Obtain the module and add it into your project's CMake modules path:
@@ -94,12 +83,15 @@ To add iwyu mapping files use the variable IWYU_IMP is a list, that should have 
 2. Run things:
 
    ```bash
-   $ cmake --build build --target clangformat
+   $ cmake --build build --target format
    ```
+
+## Extra changes worth noting
+- In iwyu python scripts I added code to make sure that when exit code 2 is received the script exit with exit code 0 (code 2 in iwyu states that everything worked well)
 
 ## Example
 
-See an example [here](https://github.com/zemasoft/clangformat-cmake-example).
+See an example [here](https://github.com/ErezAmihud/cpp-base).
 
 [language.url]:   https://cmake.org/
 [language.badge]: https://img.shields.io/badge/language-CMake-blue.svg

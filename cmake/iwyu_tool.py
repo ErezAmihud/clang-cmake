@@ -497,4 +497,5 @@ def _bootstrap(sys_argv):
 
 
 if __name__ == '__main__':
-    sys.exit(_bootstrap(sys.argv))
+    ret = _bootstrap(sys.argv)
+    sys.exit(0 if ret == 2 else ret)
