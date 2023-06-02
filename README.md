@@ -74,6 +74,9 @@ IWYU_IMP - the files of the iwyu mapping
    target_iwyu_setup(sometarget)
    ```
 
+To setup all the things for a specific target:
+`target_setup(sometarget)`
+
 ## Usage
 
 The module add a few custom commands:
