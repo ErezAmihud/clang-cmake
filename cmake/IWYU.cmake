@@ -10,6 +10,11 @@ set(IWYU_FIX_INCLUDES ${CMAKE_CURRENT_LIST_DIR}/fix_includes.py)
 function(prefix_iwyu_setup prefix)
 	find_program(PYTHON_EXECUTABLE python)
 	
+	foreach(iwyu_source ${ARGN})
+		get_filename_component(iwyu_source ${iwyu_source} ABSOLUTE)
+		list(APPEND iwyu_sources ${iwyu_source})
+	endforeach()
+
 	set(IWYU_IMP_COMMAND "")
 	if(IWYU_IMP)
 		set(IWYU_IMP_COMMAND "")
@@ -22,6 +27,7 @@ function(prefix_iwyu_setup prefix)
 		${PYTHON_EXECUTABLE}
 		${IWYU_FIX_INCLUDES}
 		-p=${CMAKE_BINARY_DIR}
+		${iwyu_sources}
 		--
 		${IWYU_IMP_COMMAND}
 		WORKING_DIRECTORY
@@ -35,6 +41,7 @@ function(prefix_iwyu_setup prefix)
 		${PYTHON_EXECUTABLE}
 		${IWYU_TOOL}
 		-p=${CMAKE_BINARY_DIR}
+		${iwyu_sources}
 		--
 		${IWYU_IMP_COMMAND}
 		WORKING_DIRECTORY
