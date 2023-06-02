@@ -22,28 +22,19 @@ function(prefix_iwyu_setup prefix)
 			set(IWYU_IMP_COMMAND ${IWYU_IMP_COMMAND} -Xiwyu --mapping_file=${tmp})
 		endforeach()
 	endif()
+
+	set(IWYU_OUTPUT "${CMAKE_BINARY_DIR}/${prefix}_iwyu.txt")
+	set(IWYU_COMMAND ${PYTHON_EXECUTABLE} ${IWYU_TOOL} -p=${CMAKE_BINARY_DIR} -- ${IWYU_IMP_COMMAND})
 	add_custom_target(${prefix}-iwyu
-		COMMAND
-		${PYTHON_EXECUTABLE}
-		${IWYU_FIX_INCLUDES}
-		-p=${CMAKE_BINARY_DIR}
-		${iwyu_sources}
-		--
-		${IWYU_IMP_COMMAND}
-		WORKING_DIRECTORY
-		${CMAKE_SOURCE_DIR}
+		COMMAND ${IWYU_COMMAND} > ${IWYU_OUTPUT} || echo "nothing-print to avoid faliure"
+		COMMAND ${PYTHON_EXECUTABLE} ${IWYU_FIX_INCLUDES} < ${IWYU_OUTPUT}
+		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 		COMMENT
 		"IWYU ${prefix}..."
 	)
 
 	add_custom_target(${prefix}-iwyu-check
-		COMMAND
-		${PYTHON_EXECUTABLE}
-		${IWYU_TOOL}
-		-p=${CMAKE_BINARY_DIR}
-		${iwyu_sources}
-		--
-		${IWYU_IMP_COMMAND}
+		COMMAND ${IWYU_COMMAND}
 		WORKING_DIRECTORY
 		${CMAKE_SOURCE_DIR}
 		COMMENT
