@@ -29,7 +29,7 @@ function(prefix_iwyu_setup prefix)
 	set(IWYU_COMMAND ${PYTHON_EXECUTABLE} ${IWYU_TOOL} -p=${CMAKE_BINARY_DIR} ${iwyu_sources} -- ${IWYU_IMP_COMMAND})
 	add_custom_target(${prefix}-iwyu
 		COMMAND ${IWYU_COMMAND} > ${IWYU_OUTPUT} || echo "nothing-print to avoid faliure"
-		COMMAND ${PYTHON_EXECUTABLE} ${IWYU_FIX_INCLUDES} < ${IWYU_OUTPUT}
+		COMMAND ${PYTHON_EXECUTABLE} ${IWYU_FIX_INCLUDES} --nosafe_headers < ${IWYU_OUTPUT}
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 		COMMENT
 		"IWYU ${prefix}..."
