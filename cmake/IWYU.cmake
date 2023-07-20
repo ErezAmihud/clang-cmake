@@ -9,12 +9,10 @@ set(IWYU_TOOL ${CMAKE_CURRENT_LIST_DIR}/iwyu_tool.py)
 set(IWYU_FIX_INCLUDES ${CMAKE_CURRENT_LIST_DIR}/fix_includes.py)
 function(prefix_iwyu_setup prefix)
 	find_program(PYTHON_EXECUTABLE python)
-	
-	list(FILTER ARGN EXCLUDE REGEX ".hpp")
+    list(FILTER ARGN EXCLUDE REGEX ".hpp")
 	list(FILTER ARGN EXCLUDE REGEX ".h$")
-	
-	foreach(iwyu_source ${ARGN})
 
+	foreach(iwyu_source ${ARGN})
 		get_filename_component(iwyu_source ${iwyu_source} ABSOLUTE)
 		list(APPEND iwyu_sources ${iwyu_source})
 	endforeach()

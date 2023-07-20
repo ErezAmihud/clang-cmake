@@ -373,7 +373,22 @@ def main():
         # Find our database
         build_path = find_compilation_database(db_path)
 
-    clang_tidy_binary = find_binary(args.clang_tidy_binary, "clang-tidy", build_path)
+    try:
+        invocation = [args.clang_tidy_binary, '-list-checks']
+        invocation.append('-p=' + build_path)
+        if args.checks:
+            invocation.append('-checks=' + args.checks)
+            invocation.append('-')
+        if args.quiet:
+          # Even with -quiet we still want to check if we can call clang-tidy.
+          with open(os.devnull, 'w') as dev_null:
+            subprocess.check_call(invocation, stdout=dev_null)
+        else:
+          subprocess.check_call(invocation)
+    except:
+        print("Unable to run clang-tidy.", file=sys.stderr)
+        sys.exit(1)
+
 
     tmpdir = None
     if args.fix:
@@ -407,7 +422,7 @@ def main():
                 target=run_tidy,
                 args=(
                     args,
-                    clang_tidy_binary,
+                    args.clang_tidy_binary,
                     tmpdir,
                     build_path,
                     task_queue,
